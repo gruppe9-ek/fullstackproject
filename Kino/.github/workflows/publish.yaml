@@ -1,0 +1,51 @@
+name: Publish
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "pom.xml"
+      - "Dockerfile"
+      - ".github/workflows/publish.yaml"
+
+jobs:
+  test-build-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab3762ebc23c3225a5160d61d8  # v4 pinned
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9  # v4 pinned
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run tests
+        run: mvn -B -q test
+
+      - name: Log in to GHCR
+        uses: docker/login-action@a464b3e72a0df1c40a90c0d436f7c9b7240a0f1d  # v3 pinned
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository_owner }}/kino
+          COMMIT=${{ github.sha }}
+          docker build -t $IMAGE:latest -t $IMAGE:$COMMIT .
+
+      - name: Push image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository_owner }}/kino
+          COMMIT=${{ github.sha }}
+          docker push $IMAGE:latest
+          docker push $IMAGE:$COMMIT
