@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/shows")
-@CrossOrigin
 public class ShowController {
     private final ShowService service;
     public ShowController(ShowService service) { this.service = service; }
