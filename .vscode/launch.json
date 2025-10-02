@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-KinoApplication",
+      "request": "launch",
+      "mainClass": "gruppe9ek.kino.KinoApplication",
+      "projectName": "Kino",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
