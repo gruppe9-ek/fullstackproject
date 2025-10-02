@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "bookings")
@@ -19,16 +19,20 @@ public class Booking {
     private Integer showId;
 
     @NotBlank
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
+    @Size(max = 255)
+    @Column(nullable = false, length = 255)
     private String customerName;
 
     @NotBlank
-    @Email
-    @Size(max = 100)
-    @Column(nullable = false, length = 100)
-    private String customerEmail;
+    @Size(max = 20)
+    @Column(nullable = false, name = "customer_phone", length = 20)
+    private String customerPhone;
 
-    @Column(name = "booking_datetime", nullable = false)
-    private LocalDateTime bookingDatetime = LocalDateTime.now();
+    @NotNull
+    @Column(nullable = false, name = "total_amount", precision = 10, scale = 2)
+    private BigDecimal totalAmount;
+
+    @NotNull
+    @Column(nullable = false, name = "sold_by_id")
+    private Integer soldById;
 }

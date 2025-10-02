@@ -21,6 +21,6 @@ public class Seat {
     private Integer seatNumber;
 
     @NotNull
-    @Column(nullable = false)
-    private Integer cinemaHallId;
+    @Column(nullable = false, name = "theater_id")
+    private Integer theaterId;
 }
