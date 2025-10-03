@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Kino Admin – Movies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/moviesAdmin.css">
+</head>
+<body>
+<h1>Admin – Movies</h1>
+
+<form id="movieForm" novalidate>
+    <input type="hidden" id="movieId" />
+    <div class="row">
+        <div>
+            <label for="title">Title *</label>
+            <input id="title" required maxlength="255" />
+            <div class="hint">Required</div>
+        </div>
+        <div>
+            <label for="category">Category *</label>
+            <input id="category" required maxlength="50" />
+            <div class="hint">Required</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <label for="ageLimit">Age limit *</label>
+            <select id="ageLimit" required>
+                <option value="">Choose…</option>
+                <option value="0">0 (Tilladt for alle)</option>
+                <option value="7">7</option>
+                <option value="11">11</option>
+                <option value="15">15</option>
+                <option value="18">18</option>
+            </select>
+        </div>
+        <div>
+            <label for="duration">Duration (minutes) *</label>
+            <input id="duration" type="number" min="1" required />
+            <div class="hint">Must be &gt; 0</div>
+        </div>
+    </div>
+
+    <label for="actors">Actors</label>
+    <textarea id="actors" rows="2"></textarea>
+
+    <label for="description">Description</label>
+    <textarea id="description" rows="3"></textarea>
+
+    <div class="actions">
+        <button class="primary" type="submit">Save</button>
+        <button type="button" id="resetBtn">Reset</button>
+    </div>
+    <div class="muted">* Required fields</div>
+</form>
+
+<div id="movies"></div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/moviesAdmin.js"></script>
+</body>
+</html>
