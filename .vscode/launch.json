@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "TestKinoApplication",
+      "request": "launch",
+      "mainClass": "gruppe9ek.kino.TestKinoApplication",
+      "projectName": "Kino"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-KinoApplication",
       "request": "launch",
       "mainClass": "gruppe9ek.kino.KinoApplication",
