@@ -593,6 +593,155 @@ input:focus {
     border-top: var(--border);
 }
 
+/* ---- Receipt Styles ---- */
+.receipt-header {
+    text-align: center;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 2px solid var(--btn-primary-bg);
+}
+
+.receipt-header h2 {
+    color: var(--btn-primary-bg);
+    margin-bottom: var(--space-1);
+    font-size: 2em;
+}
+
+.receipt-subtitle {
+    color: var(--muted);
+    font-size: 1.1em;
+    margin: 0;
+}
+
+.receipt-container {
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    font-family: 'Courier New', monospace;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.receipt-cinema-header {
+    text-align: center;
+    border-bottom: 2px dashed #333;
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.receipt-cinema-name {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: var(--space-1);
+    letter-spacing: 2px;
+}
+
+.receipt-section {
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px dashed #999;
+}
+
+.receipt-section:last-of-type {
+    border-bottom: 2px dashed #333;
+}
+
+.receipt-section-title {
+    font-weight: bold;
+    margin-bottom: var(--space-2);
+    font-size: 1.1em;
+    text-decoration: underline;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    line-height: 1.6;
+}
+
+.receipt-row.bold {
+    font-weight: bold;
+    font-size: 1.05em;
+}
+
+.receipt-row.indent {
+    padding-left: var(--space-3);
+    font-size: 0.95em;
+}
+
+.receipt-row.total {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 2px solid #333;
+}
+
+.receipt-barcode {
+    text-align: center;
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 2px dashed #333;
+}
+
+.receipt-barcode-text {
+    font-size: 1.4em;
+    font-weight: bold;
+    letter-spacing: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.receipt-footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9em;
+    margin-top: var(--space-3);
+    line-height: 1.6;
+}
+
+.receipt-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.receipt-actions .btn {
+    min-width: 180px;
+}
+
+/* Print styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .receipt-container,
+    .receipt-container * {
+        visibility: visible;
+    }
+
+    .receipt-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        padding: 20px;
+    }
+
+    .receipt-header,
+    .receipt-actions,
+    .progress-steps,
+    .navigation {
+        display: none !important;
+    }
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
     .movie-grid {
@@ -621,5 +770,17 @@ input:focus {
         width: 28px;
         height: 28px;
         font-size: 0.7em;
+    }
+
+    .receipt-container {
+        padding: var(--space-2);
+    }
+
+    .receipt-actions {
+        flex-direction: column;
+    }
+
+    .receipt-actions .btn {
+        width: 100%;
     }
 }

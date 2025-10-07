@@ -76,22 +76,40 @@
     <div id="selectedProductsInfo" class="selected-products-info"></div>
 </div>
 
-<!-- Step 5: Confirmation -->
+<!-- Step 5: Confirmation / Receipt -->
 <div id="step5" class="step-content">
-    <h2>Booking Oversigt</h2>
-    <div id="bookingSummary" class="summary-box"></div>
+    <!-- Pre-booking confirmation view -->
+    <div id="confirmationView">
+        <h2>Booking Oversigt</h2>
+        <div id="bookingSummary" class="summary-box"></div>
 
-    <form id="customerForm" class="customer-form">
-        <h3>Dine Oplysninger</h3>
-        <div class="form-group">
-            <label for="customerName">Fulde Navn *</label>
-            <input type="text" id="customerName" required maxlength="255" placeholder="Indtast dit navn" />
+        <form id="customerForm" class="customer-form">
+            <h3>Dine Oplysninger</h3>
+            <div class="form-group">
+                <label for="customerName">Fulde Navn *</label>
+                <input type="text" id="customerName" required maxlength="255" placeholder="Indtast dit navn" />
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Telefonnummer *</label>
+                <input type="tel" id="customerPhone" required maxlength="20" placeholder="Indtast dit telefonnummer" />
+            </div>
+        </form>
+    </div>
+
+    <!-- Post-booking receipt view -->
+    <div id="receiptView" style="display: none;">
+        <div class="receipt-header">
+            <h2>✓ Booking Bekræftet</h2>
+            <p class="receipt-subtitle">Tak for din bestilling!</p>
         </div>
-        <div class="form-group">
-            <label for="customerPhone">Telefonnummer *</label>
-            <input type="tel" id="customerPhone" required maxlength="20" placeholder="Indtast dit telefonnummer" />
+        <div id="receiptContent" class="receipt-container">
+            <!-- Receipt will be rendered here by JavaScript -->
         </div>
-    </form>
+        <div class="receipt-actions">
+            <button id="downloadReceiptBtn" type="button" class="btn primary">Download Kvittering</button>
+            <button id="newBookingBtn" type="button" class="btn">Start Ny Booking</button>
+        </div>
+    </div>
 </div>
 
 <!-- Navigation buttons -->

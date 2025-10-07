@@ -32,7 +32,8 @@ const state = {
     selectedSeats: [],
     selectedProducts: [], // [{product: Product, quantity: number}]
     customerName: '',
-    customerPhone: ''
+    customerPhone: '',
+    bookingReceipt: null // Stores completed booking data for receipt
 };
 
 // ==================== Utilities ====================
@@ -713,6 +714,118 @@ function renderSummary() {
     `;
 }
 
+// ==================== Receipt Rendering ====================
+function renderReceipt(bookingData) {
+    const receiptContent = $('#receiptContent');
+    const currentDate = new Date().toLocaleString('da-DK', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    // Build seats list
+    const seatsList = bookingData.seats
+        .map(function(s) {
+            return 'Række ' + s.rowNumber + ', Plads ' + s.seatNumber;
+        })
+        .join(', ');
+
+    // Build products section if any
+    let productsHtml = '';
+    if (bookingData.products.length > 0) {
+        productsHtml = '<div class="receipt-section-title">PRODUKTER</div>';
+        bookingData.products.forEach(function(sp) {
+            const itemTotal = sp.quantity * Number(sp.product.price);
+            productsHtml += `
+                <div class="receipt-row indent">
+                    <span>${sp.quantity}x ${escapeHtml(sp.product.productName)}</span>
+                    <span>${formatPrice(itemTotal)}</span>
+                </div>
+            `;
+        });
+        productsHtml += `
+            <div class="receipt-row bold" style="margin-top: 8px;">
+                <span>Produkter Subtotal:</span>
+                <span>${formatPrice(bookingData.productsAmount)}</span>
+            </div>
+        `;
+    }
+
+    receiptContent.innerHTML = `
+        <div class="receipt-cinema-header">
+            <div class="receipt-cinema-name">KINO</div>
+            <div>Biografbilletter</div>
+            <div>${currentDate}</div>
+        </div>
+
+        <div class="receipt-section">
+            <div class="receipt-row bold">Booking ID: ${bookingData.bookingId}</div>
+            <div class="receipt-row">Kunde: ${escapeHtml(bookingData.customerName)}</div>
+            <div class="receipt-row">Telefon: ${escapeHtml(bookingData.customerPhone)}</div>
+        </div>
+
+        <div class="receipt-section">
+            <div class="receipt-section-title">FILM & FORESTILLING</div>
+            <div class="receipt-row">
+                <span>Film:</span>
+                <span>${escapeHtml(bookingData.movie.title)}</span>
+            </div>
+            <div class="receipt-row">
+                <span>Kategori:</span>
+                <span>${escapeHtml(bookingData.movie.category)}</span>
+            </div>
+            <div class="receipt-row">
+                <span>Varighed:</span>
+                <span>${bookingData.movie.durationMinutes} min</span>
+            </div>
+            <div class="receipt-row">
+                <span>Dato & Tid:</span>
+                <span>${formatDateTime(bookingData.show.showDatetime)}</span>
+            </div>
+            <div class="receipt-row">
+                <span>Teater:</span>
+                <span>${bookingData.show.theaterId}</span>
+            </div>
+        </div>
+
+        <div class="receipt-section">
+            <div class="receipt-section-title">BILLETTER</div>
+            <div class="receipt-row indent">
+                <span>${bookingData.seats.length}x Billet @ ${formatPrice(bookingData.show.price)}</span>
+                <span>${formatPrice(bookingData.ticketsAmount)}</span>
+            </div>
+            <div class="receipt-row indent" style="font-size: 0.85em; color: #666;">
+                <span colspan="2">${seatsList}</span>
+            </div>
+            <div class="receipt-row bold" style="margin-top: 8px;">
+                <span>Billetter Subtotal:</span>
+                <span>${formatPrice(bookingData.ticketsAmount)}</span>
+            </div>
+        </div>
+
+        ${productsHtml ? '<div class="receipt-section">' + productsHtml + '</div>' : ''}
+
+        <div class="receipt-section">
+            <div class="receipt-row total">
+                <span>TOTAL:</span>
+                <span>${formatPrice(bookingData.totalAmount)}</span>
+            </div>
+        </div>
+
+        <div class="receipt-barcode">
+            <div class="receipt-barcode-text">${bookingData.bookingId.toString().padStart(8, '0')}</div>
+        </div>
+
+        <div class="receipt-footer">
+            Tak for dit besøg!<br>
+            Gem denne kvittering som dokumentation<br>
+            Medbring booking ID ved afhentning
+        </div>
+    `;
+}
+
 // ==================== Booking Submission ====================
 confirmBtn.onclick = async function() {
     // Indhent kunde information
@@ -780,35 +893,38 @@ confirmBtn.onclick = async function() {
 
         showToast('Booking gennemført!');
 
-        // Vis bekræftelse og nulstil
+        // Store receipt data
+        state.bookingReceipt = {
+            bookingId: createdBooking.bookingId,
+            customerName: state.customerName,
+            customerPhone: state.customerPhone,
+            movie: state.selectedMovie,
+            show: state.selectedShow,
+            seats: state.selectedSeats,
+            products: state.selectedProducts,
+            ticketsAmount: ticketsAmount,
+            productsAmount: productsAmount,
+            totalAmount: totalAmount,
+            bookingDate: new Date()
+        };
+
+        // Switch to receipt view
         setTimeout(function() {
-            let confirmMessage = 'Booking bekræftet!\n\n' +
-                'Booking ID: ' + createdBooking.bookingId + '\n' +
-                'Film: ' + state.selectedMovie.title + '\n' +
-                'Forestilling: ' + formatDateTime(state.selectedShow.showDatetime) + '\n' +
-                'Billetter: ' + state.selectedSeats.length + ' (' + formatPrice(ticketsAmount) + ')\n';
+            $('#confirmationView').style.display = 'none';
+            $('#receiptView').style.display = 'block';
 
-            if (state.selectedProducts.length > 0) {
-                confirmMessage += 'Produkter: ' + state.selectedProducts.length + ' (' + formatPrice(productsAmount) + ')\n';
-            }
+            // Hide navigation buttons
+            backBtn.style.display = 'none';
+            confirmBtn.style.display = 'none';
 
-            confirmMessage += 'Total: ' + formatPrice(totalAmount) + '\n\nTak, ' + state.customerName + '!';
+            // Render the receipt
+            renderReceipt(state.bookingReceipt);
 
-            alert(confirmMessage);
+            // Scroll to top
+            window.scrollTo(0, 0);
 
-            // Nulstil og start forfra
-            state.selectedMovie = null;
-            state.selectedShow = null;
-            state.selectedSeats = [];
-            state.selectedProducts = [];
-            state.customerName = '';
-            state.customerPhone = '';
-            $('#customerForm').reset();
-
-            // Genindlæs data for at få opdaterede bookinger
-            loadAllData().then(function() {
-                goToStep(1);
-            });
+            // Genindlæs data i baggrunden
+            loadAllData();
         }, 500);
 
     } catch (e) {
@@ -818,6 +934,33 @@ confirmBtn.onclick = async function() {
         confirmBtn.disabled = false;
         confirmBtn.textContent = 'Bekræft Booking';
     }
+};
+
+// ==================== Receipt Actions ====================
+// Download Receipt
+$('#downloadReceiptBtn').onclick = function() {
+    // Trigger browser print dialog (user can save as PDF)
+    window.print();
+};
+
+// New Booking
+$('#newBookingBtn').onclick = function() {
+    // Reset all state
+    state.selectedMovie = null;
+    state.selectedShow = null;
+    state.selectedSeats = [];
+    state.selectedProducts = [];
+    state.customerName = '';
+    state.customerPhone = '';
+    state.bookingReceipt = null;
+    $('#customerForm').reset();
+
+    // Show confirmation view again, hide receipt
+    $('#confirmationView').style.display = 'block';
+    $('#receiptView').style.display = 'none';
+
+    // Go back to step 1
+    goToStep(1);
 };
 
 // ==================== Initialize ====================
