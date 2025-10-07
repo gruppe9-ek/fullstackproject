@@ -21,6 +21,8 @@ let allShows = [];
 let allSeats = [];
 let allBookings = [];
 let allBookingSeats = [];
+let allProducts = [];
+let allProductSales = [];
 
 // Booking state
 const state = {
@@ -28,6 +30,7 @@ const state = {
     selectedMovie: null,
     selectedShow: null,
     selectedSeats: [],
+    selectedProducts: [], // [{product: Product, quantity: number}]
     customerName: '',
     customerPhone: ''
 };
@@ -127,14 +130,18 @@ async function loadAllData() {
             api('/shows'),
             api('/seats'),
             api('/bookings'),
-            api('/booking-seats')
+            api('/booking-seats'),
+            api('/products'),
+            api('/product-sales')
         ]);
         allMovies = results[0];
         allShows = results[1];
         allSeats = results[2];
         allBookings = results[3];
         allBookingSeats = results[4];
-        console.log('Data indlæst:', { allMovies, allShows, allSeats, allBookings, allBookingSeats });
+        allProducts = results[5];
+        allProductSales = results[6];
+        console.log('Data indlæst:', { allMovies, allShows, allSeats, allBookings, allBookingSeats, allProducts, allProductSales });
     } catch (e) {
         showToast('Kunne ikke indlæse data: ' + e.message);
         throw e;
@@ -143,7 +150,7 @@ async function loadAllData() {
 
 // ==================== Step Navigation ====================
 function goToStep(stepNum) {
-    if (stepNum < 1 || stepNum > 4) return;
+    if (stepNum < 1 || stepNum > 5) return;
 
     // Opdater trin indhold synlighed
     $$('.step-content').forEach(function(el) {
@@ -168,13 +175,13 @@ function goToStep(stepNum) {
         backBtn.style.display = 'none';
     }
 
-    if (stepNum < 4) {
+    if (stepNum < 5) {
         nextBtn.style.display = 'block';
     } else {
         nextBtn.style.display = 'none';
     }
 
-    if (stepNum === 4) {
+    if (stepNum === 5) {
         confirmBtn.style.display = 'block';
     } else {
         confirmBtn.style.display = 'none';
@@ -184,7 +191,8 @@ function goToStep(stepNum) {
     if (stepNum === 1) renderMovies();
     else if (stepNum === 2) renderShows();
     else if (stepNum === 3) renderSeats();
-    else if (stepNum === 4) renderSummary();
+    else if (stepNum === 4) renderProducts();
+    else if (stepNum === 5) renderSummary();
 }
 
 function validateStep() {
@@ -207,7 +215,8 @@ function validateStep() {
         showToast('Vælg venligst mindst én plads');
         return false;
     }
-    if (currentStep === 4) {
+    // Step 4 (products) is optional - no validation required
+    if (currentStep === 5) {
         if (!customerName.trim()) {
             showToast('Indtast venligst dit navn');
             return false;
@@ -227,7 +236,7 @@ backBtn.onclick = function() {
 };
 
 nextBtn.onclick = function() {
-    if (validateStep() && state.currentStep < 4) {
+    if (validateStep() && state.currentStep < 5) {
         goToStep(state.currentStep + 1);
     }
 };
@@ -272,6 +281,7 @@ function renderMovies() {
             state.selectedMovie = movie;
             state.selectedShow = null;
             state.selectedSeats = [];
+            state.selectedProducts = [];
             renderMovies();
         };
 
@@ -328,6 +338,7 @@ function renderShows() {
         card.onclick = function() {
             state.selectedShow = show;
             state.selectedSeats = [];
+            state.selectedProducts = [];
             renderShows();
         };
 
@@ -476,16 +487,203 @@ function renderSeats() {
     }
 }
 
-// ==================== Step 4: Summary & Confirmation ====================
+// ==================== Step 4: Product Selection ====================
+function renderProducts() {
+    const selectedSeatsInfoProducts = $('#selectedSeatsInfoProducts');
+    const productList = $('#productList');
+    const selectedProductsInfo = $('#selectedProductsInfo');
+
+    if (!state.selectedShow) {
+        productList.innerHTML = '<p class="muted">Ingen forestilling valgt</p>';
+        return;
+    }
+
+    // Vis info om valgte billetter
+    selectedSeatsInfoProducts.innerHTML = `
+        <strong>${escapeHtml(state.selectedMovie.title)}</strong><br>
+        ${formatDateTime(state.selectedShow.showDatetime)}<br>
+        ${state.selectedSeats.length} billet(ter): ${formatPrice(state.selectedSeats.length * Number(state.selectedShow.price))}
+    `;
+
+    if (allProducts.length === 0) {
+        productList.innerHTML = '<p class="muted">Ingen produkter tilgængelige. Du kan springe dette trin over.</p>';
+        selectedProductsInfo.innerHTML = '';
+        return;
+    }
+
+    // Organiser produkter efter kategori
+    const categories = {
+        candy: [],
+        soda: [],
+        popcorn: [],
+        other: []
+    };
+
+    allProducts.forEach(function(product) {
+        categories[product.category].push(product);
+    });
+
+    productList.innerHTML = '';
+
+    // Render produkter efter kategori
+    const categoryOrder = ['popcorn', 'soda', 'candy', 'other'];
+    const categoryNames = {
+        candy: 'Slik',
+        soda: 'Drikkevarer',
+        popcorn: 'Popcorn',
+        other: 'Andet'
+    };
+
+    categoryOrder.forEach(function(category) {
+        const productsInCategory = categories[category];
+        if (productsInCategory.length === 0) return;
+
+        // Kategori overskrift
+        const categoryHeader = document.createElement('h3');
+        categoryHeader.textContent = categoryNames[category];
+        categoryHeader.style.gridColumn = '1 / -1';
+        categoryHeader.style.marginTop = 'var(--space-3)';
+        categoryHeader.style.marginBottom = 'var(--space-2)';
+        productList.appendChild(categoryHeader);
+
+        // Render produkter
+        productsInCategory.forEach(function(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+
+            // Find nuværende antal for dette produkt
+            const existing = state.selectedProducts.find(function(sp) {
+                return sp.product.productId === product.productId;
+            });
+            const currentQty = existing ? existing.quantity : 0;
+
+            card.innerHTML = `
+                <div class="product-header">
+                    <div class="product-name">${escapeHtml(product.productName)}</div>
+                    <span class="product-category ${escapeHtml(product.category)}">${escapeHtml(product.category)}</span>
+                </div>
+                <div class="product-price">${formatPrice(product.price)}</div>
+                <div class="product-quantity">
+                    <button type="button" class="quantity-btn minus" data-product-id="${product.productId}">−</button>
+                    <span class="quantity-value">${currentQty}</span>
+                    <button type="button" class="quantity-btn plus" data-product-id="${product.productId}">+</button>
+                </div>
+            `;
+
+            productList.appendChild(card);
+
+            // Event listeners for quantity buttons
+            const minusBtn = card.querySelector('.quantity-btn.minus');
+            const plusBtn = card.querySelector('.quantity-btn.plus');
+
+            minusBtn.onclick = function() {
+                updateProductQuantity(product, -1);
+                renderProducts();
+            };
+
+            plusBtn.onclick = function() {
+                updateProductQuantity(product, 1);
+                renderProducts();
+            };
+        });
+    });
+
+    // Opdater valgte produkter information
+    updateSelectedProductsInfo();
+}
+
+function updateProductQuantity(product, delta) {
+    const existing = state.selectedProducts.find(function(sp) {
+        return sp.product.productId === product.productId;
+    });
+
+    if (existing) {
+        existing.quantity += delta;
+        if (existing.quantity <= 0) {
+            // Fjern fra listen
+            state.selectedProducts = state.selectedProducts.filter(function(sp) {
+                return sp.product.productId !== product.productId;
+            });
+        }
+    } else if (delta > 0) {
+        // Tilføj nyt produkt
+        state.selectedProducts.push({
+            product: product,
+            quantity: delta
+        });
+    }
+}
+
+function updateSelectedProductsInfo() {
+    const selectedProductsInfo = $('#selectedProductsInfo');
+
+    if (state.selectedProducts.length === 0) {
+        selectedProductsInfo.innerHTML = '<p style="margin: 0;">Ingen produkter valgt. Du kan fortsætte uden at vælge produkter.</p>';
+        return;
+    }
+
+    let html = '<div style="font-weight: 600; margin-bottom: var(--space-2);">Valgte Produkter:</div>';
+
+    let productsTotal = 0;
+    state.selectedProducts.forEach(function(sp) {
+        const itemTotal = sp.quantity * Number(sp.product.price);
+        productsTotal += itemTotal;
+        html += `
+            <div class="product-list-item">
+                <span>${sp.quantity}x ${escapeHtml(sp.product.productName)}</span>
+                <span>${formatPrice(itemTotal)}</span>
+            </div>
+        `;
+    });
+
+    html += `
+        <div class="product-subtotal">
+            <span>Produkter Total:</span>
+            <span>${formatPrice(productsTotal)}</span>
+        </div>
+    `;
+
+    selectedProductsInfo.innerHTML = html;
+}
+
+// ==================== Step 5: Summary & Confirmation ====================
 function renderSummary() {
     const bookingSummary = $('#bookingSummary');
-    const totalAmount = state.selectedSeats.length * Number(state.selectedShow.price);
+    const ticketsAmount = state.selectedSeats.length * Number(state.selectedShow.price);
+
+    // Beregn produkter total
+    let productsAmount = 0;
+    state.selectedProducts.forEach(function(sp) {
+        productsAmount += sp.quantity * Number(sp.product.price);
+    });
+
+    const totalAmount = ticketsAmount + productsAmount;
 
     const seatList = state.selectedSeats
         .map(function(s) {
             return 'Række ' + s.rowNumber + ', Plads ' + s.seatNumber;
         })
         .join(', ');
+
+    let productsSectionHtml = '';
+    if (state.selectedProducts.length > 0) {
+        const productsList = state.selectedProducts
+            .map(function(sp) {
+                return sp.quantity + 'x ' + escapeHtml(sp.product.productName) + ' (' + formatPrice(sp.quantity * Number(sp.product.price)) + ')';
+            })
+            .join('<br>');
+
+        productsSectionHtml = `
+            <div class="summary-section">
+                <div class="summary-label">Produkter (${state.selectedProducts.length})</div>
+                <div class="summary-value">${productsList}</div>
+            </div>
+            <div class="summary-section">
+                <div class="summary-label">Produkter Subtotal</div>
+                <div class="summary-value">${formatPrice(productsAmount)}</div>
+            </div>
+        `;
+    }
 
     bookingSummary.innerHTML = `
         <div class="summary-section">
@@ -500,9 +698,14 @@ function renderSummary() {
             </div>
         </div>
         <div class="summary-section">
-            <div class="summary-label">Pladser (${state.selectedSeats.length})</div>
+            <div class="summary-label">Billetter (${state.selectedSeats.length})</div>
             <div class="summary-value">${seatList}</div>
         </div>
+        <div class="summary-section">
+            <div class="summary-label">Billetter Subtotal</div>
+            <div class="summary-value">${formatPrice(ticketsAmount)}</div>
+        </div>
+        ${productsSectionHtml}
         <div class="summary-section">
             <div class="summary-label">Total Beløb</div>
             <div class="summary-total">${formatPrice(totalAmount)}</div>
@@ -522,7 +725,13 @@ confirmBtn.onclick = async function() {
     confirmBtn.textContent = 'Behandler...';
 
     try {
-        const totalAmount = state.selectedSeats.length * Number(state.selectedShow.price);
+        // Beregn totaler
+        const ticketsAmount = state.selectedSeats.length * Number(state.selectedShow.price);
+        let productsAmount = 0;
+        state.selectedProducts.forEach(function(sp) {
+            productsAmount += sp.quantity * Number(sp.product.price);
+        });
+        const totalAmount = ticketsAmount + productsAmount;
 
         // 1. Opret bookingen
         const booking = {
@@ -553,16 +762,45 @@ confirmBtn.onclick = async function() {
             });
         }
 
+        // 3. Opret product sales for hvert valgt produkt
+        for (let i = 0; i < state.selectedProducts.length; i++) {
+            const sp = state.selectedProducts[i];
+            const productSale = {
+                productId: sp.product.productId,
+                quantity: sp.quantity,
+                totalPrice: sp.quantity * Number(sp.product.price),
+                soldById: 1, // Placeholder
+                bookingId: createdBooking.bookingId
+            };
+            await api('/product-sales', {
+                method: 'POST',
+                body: JSON.stringify(productSale)
+            });
+        }
+
         showToast('Booking gennemført!');
 
         // Vis bekræftelse og nulstil
         setTimeout(function() {
-            alert('Booking bekræftet!\n\nBooking ID: ' + createdBooking.bookingId + '\nFilm: ' + state.selectedMovie.title + '\nForestilling: ' + formatDateTime(state.selectedShow.showDatetime) + '\nPladser: ' + state.selectedSeats.length + '\nTotal: ' + formatPrice(totalAmount) + '\n\nTak, ' + state.customerName + '!');
+            let confirmMessage = 'Booking bekræftet!\n\n' +
+                'Booking ID: ' + createdBooking.bookingId + '\n' +
+                'Film: ' + state.selectedMovie.title + '\n' +
+                'Forestilling: ' + formatDateTime(state.selectedShow.showDatetime) + '\n' +
+                'Billetter: ' + state.selectedSeats.length + ' (' + formatPrice(ticketsAmount) + ')\n';
+
+            if (state.selectedProducts.length > 0) {
+                confirmMessage += 'Produkter: ' + state.selectedProducts.length + ' (' + formatPrice(productsAmount) + ')\n';
+            }
+
+            confirmMessage += 'Total: ' + formatPrice(totalAmount) + '\n\nTak, ' + state.customerName + '!';
+
+            alert(confirmMessage);
 
             // Nulstil og start forfra
             state.selectedMovie = null;
             state.selectedShow = null;
             state.selectedSeats = [];
+            state.selectedProducts = [];
             state.customerName = '';
             state.customerPhone = '';
             $('#customerForm').reset();
