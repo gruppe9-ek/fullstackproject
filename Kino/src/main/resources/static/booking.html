@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="da">
+<head>
+    <meta charset="utf-8" />
+    <title>Kino – Bestil Billetter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/booking.css">
+</head>
+<body>
+<h1>Bestil Biografbilletter</h1>
+
+<!-- Progress indicator -->
+<div class="progress-steps">
+    <div class="step active" data-step="1">
+        <span class="step-number">1</span>
+        <span class="step-label">Film</span>
+    </div>
+    <div class="step" data-step="2">
+        <span class="step-number">2</span>
+        <span class="step-label">Forestilling</span>
+    </div>
+    <div class="step" data-step="3">
+        <span class="step-number">3</span>
+        <span class="step-label">Sæder</span>
+    </div>
+    <div class="step" data-step="4">
+        <span class="step-number">4</span>
+        <span class="step-label">Produkter</span>
+    </div>
+    <div class="step" data-step="5">
+        <span class="step-number">5</span>
+        <span class="step-label">Bekræft</span>
+    </div>
+</div>
+
+<!-- Step 1: Select Movie -->
+<div id="step1" class="step-content active">
+    <h2>Vælg en Film</h2>
+    <div id="movieList" class="movie-grid"></div>
+</div>
+
+<!-- Step 2: Select Show -->
+<div id="step2" class="step-content">
+    <h2>Vælg en Forestilling</h2>
+    <div id="selectedMovieInfo" class="info-box"></div>
+    <div id="showList" class="show-list"></div>
+</div>
+
+<!-- Step 3: Select Seats -->
+<div id="step3" class="step-content">
+    <h2>Vælg Dine Sæder</h2>
+    <div id="selectedShowInfo" class="info-box"></div>
+    <div class="seat-legend">
+        <div class="legend-item">
+            <span class="seat available"></span> Ledig
+        </div>
+        <div class="legend-item">
+            <span class="seat selected"></span> Valgt
+        </div>
+        <div class="legend-item">
+            <span class="seat booked"></span> Optaget
+        </div>
+    </div>
+    <div class="theater-container">
+        <div class="screen">Lærred</div>
+        <div id="seatMap" class="seat-map"></div>
+    </div>
+    <div id="selectedSeatsInfo" class="selected-seats-info"></div>
+</div>
+
+<!-- Step 4: Select Products -->
+<div id="step4" class="step-content">
+    <h2>Tilføj Produkter (Valgfrit)</h2>
+    <div id="selectedSeatsInfoProducts" class="info-box"></div>
+    <div id="productList" class="product-grid"></div>
+    <div id="selectedProductsInfo" class="selected-products-info"></div>
+</div>
+
+<!-- Step 5: Confirmation / Receipt -->
+<div id="step5" class="step-content">
+    <!-- Pre-booking confirmation view -->
+    <div id="confirmationView">
+        <h2>Booking Oversigt</h2>
+        <div id="bookingSummary" class="summary-box"></div>
+
+        <form id="customerForm" class="customer-form">
+            <h3>Dine Oplysninger</h3>
+            <div class="form-group">
+                <label for="customerName">Fulde Navn *</label>
+                <input type="text" id="customerName" required maxlength="255" placeholder="Indtast dit navn" />
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Telefonnummer *</label>
+                <input type="tel" id="customerPhone" required maxlength="20" placeholder="Indtast dit telefonnummer" />
+            </div>
+        </form>
+    </div>
+
+    <!-- Post-booking receipt view -->
+    <div id="receiptView" style="display: none;">
+        <div class="receipt-header">
+            <h2>✓ Booking Bekræftet</h2>
+            <p class="receipt-subtitle">Tak for din bestilling!</p>
+        </div>
+        <div id="receiptContent" class="receipt-container">
+            <!-- Receipt will be rendered here by JavaScript -->
+        </div>
+        <div class="receipt-actions">
+            <button id="downloadReceiptBtn" type="button" class="btn primary">Download Kvittering</button>
+            <button id="newBookingBtn" type="button" class="btn">Start Ny Booking</button>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation buttons -->
+<div class="navigation">
+    <button id="backBtn" class="btn" style="display: none;">Tilbage</button>
+    <button id="nextBtn" class="btn primary">Næste</button>
+    <button id="confirmBtn" class="btn primary" style="display: none;">Bekræft Booking</button>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/booking.js"></script>
+</body>
+</html>
