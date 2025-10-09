@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="da">
+<head>
+    <meta charset="utf-8" />
+    <title>Kino Admin – Forestillinger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/showsAdmin.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand"><a href="/">Kino</a></div>
+    <nav class="nav">
+        <a href="/admin-dashboard.html">Dashboard</a>
+        <button id="logoutBtn" class="btn btn-outline">Log ud</button>
+    </nav>
+</header>
+
+<main class="container">
+<h1>Admin – Forestillinger</h1>
+<p class="muted">Planlæg tider og sale</p>
+
+<form id="showForm" novalidate>
+    <input type="hidden" id="showId" />
+
+    <div class="row">
+        <div>
+            <label for="movieId">Film *</label>
+            <select id="movieId" required>
+                <option value="">Vælg film...</option>
+            </select>
+            <div class="hint">Vælg hvilken film der vises</div>
+        </div>
+        <div>
+            <label for="theaterId">Sal *</label>
+            <select id="theaterId" required>
+                <option value="">Vælg sal...</option>
+            </select>
+            <div class="hint">Vælg hvilken sal</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <label for="showDate">Dato *</label>
+            <input id="showDate" type="date" required />
+            <div class="hint">Dato for forestilling</div>
+        </div>
+        <div>
+            <label for="showTime">Tid *</label>
+            <input id="showTime" type="time" required />
+            <div class="hint">Starttidspunkt</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <label for="price">Pris (kr.) *</label>
+            <input id="price" type="number" step="0.01" min="0" required />
+            <div class="hint">Billetpris i kroner</div>
+        </div>
+        <div>
+            <label for="status">Status *</label>
+            <select id="status" required>
+                <option value="scheduled">Scheduled</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <div class="hint">Forestillingsstatus</div>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button class="primary" type="submit">Gem</button>
+        <button type="button" id="resetBtn">Nulstil</button>
+    </div>
+    <div class="muted">* Påkrævet felt</div>
+</form>
+
+<h2>Eksisterende forestillinger</h2>
+<div id="shows"></div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+</main>
+
+<script type="module">
+    import { requireAuth, logout } from "/assets/js/adminAuth.js";
+    requireAuth("/admin-login.html");
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        logout();
+        location.href = "/admin-login.html";
+    });
+</script>
+<script src="assets/js/showsAdmin.js"></script>
+</body>
+</html>
