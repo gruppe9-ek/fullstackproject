@@ -13,7 +13,7 @@ public class Seat {
     private Integer seatId;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, name = "row_number")
     private Integer rowNumber;
 
     @NotNull
