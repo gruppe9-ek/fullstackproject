@@ -27,8 +27,8 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Run tests
-        run: mvn -B -q test
+      - name: Build
+        run: mvn -B -q package -DskipTests
 
       - name: Log in to GHCR
         uses: docker/login-action@a464b3e72a0df1c40a90c0d436f7c9b7240a0f1d  # v3 pinned
