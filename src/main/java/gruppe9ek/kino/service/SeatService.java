@@ -26,7 +26,6 @@ public class SeatService {
     }
 
     public Seat create(Seat s) {
-        s.setSeatId(null);
         return seats.save(s);
     }
 
