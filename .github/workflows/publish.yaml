@@ -27,7 +27,10 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Build
+      - name: Run tests
+        run: mvn -B -q test
+
+      - name: Build JAR
         run: mvn -B -q package -DskipTests
 
       - name: Log in to GHCR
