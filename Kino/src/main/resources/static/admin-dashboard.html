@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin – Dashboard</title>
+  <link rel="stylesheet" href="/assets/css/admin.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><a href="/">Kino</a></div>
+  <nav class="nav">
+    <a href="/admin-dashboard.html" class="active">Dashboard</a>
+    <button id="logoutBtn" class="btn btn-outline">Log ud</button>
+  </nav>
+</header>
+
+<main class="container">
+  <h1>Admin – Dashboard</h1>
+  <p class="muted">Hurtig adgang til oprettelse og vedligehold.</p>
+
+  <section class="cards">
+    <a class="card" href="/moviesAdmin.html">
+      <div class="card-icon">🎬</div>
+      <div class="card-body">
+        <div class="card-title">Film</div>
+        <div class="card-subtitle">Opret/rediger film</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="/showsAdmin.html">
+      <div class="card-icon">🗓</div>
+      <div class="card-body">
+        <div class="card-title">Forestillinger</div>
+        <div class="card-subtitle">Planlæg tider og sale</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="/seatingAdmin.html">
+      <div class="card-icon">🪑</div>
+      <div class="card-body">
+        <div class="card-title">Sædeplan</div>
+        <div class="card-subtitle">Rækker, zoner, priser</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="/reports.html">
+      <div class="card-icon">📈</div>
+      <div class="card-body">
+        <div class="card-title">Rapporter</div>
+        <div class="card-subtitle">Billetsalg, udnyttelse, mv.</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </section>
+</main>
+
+<script type="module">
+  import { requireAuth, logout } from "/assets/js/adminAuth.js";
+  requireAuth("/admin-login.html");
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    logout();
+    location.href = "/admin-login.html";
+  });
+</script>
+</body>
+</html>

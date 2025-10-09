@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kino – Aktuelle film</title>
+  <link rel="stylesheet" href="/assets/css/movies-overview.css" />
+</head>
+<body>
+<header class="site-header">
+  <h1>Aktuelle film</h1>
+</header>
+
+<main class="container">
+  <section id="grid" class="grid" aria-busy="true" aria-label="Filmoversigt"></section>
+
+  <div id="empty" class="empty" hidden>
+    <p>Ingen film lige nu.</p>
+    <button id="retryEmpty" class="btn">Opdater siden senere</button>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="/assets/js/movies-overview.js"></script>
+</body>
+</html>

@@ -33,7 +33,7 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:
 /* Når hero har klassen hero--placeholder bruges det faste biograf-billede */
 /* Fast hero-billede når vi viser velkomst */
 .hero--placeholder .hero__bg{
-    background-image: url("/static/assets/hero-default.jpg") !important; /* tving forbi evt. inline-styles */
+    background-image: url("/static/assets/biograffoto.jpeg") !important; /* tving forbi evt. inline-styles */
     background-size: cover;
     background-position: center;
     filter: saturate(105%) contrast(105%) brightness(.9);

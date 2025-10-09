@@ -1,8 +1,8 @@
 // /js/home.js
 const API = {
     moviesCurrent: "/api/movies",
-    showsFor: (id) => `/shows.html?movieId=${id}`,
-    movieInfo: (id) => `/movies/${id}`
+    bookingFor: (id) => `/booking.html?movieId=${encodeURIComponent(id)}`,
+    movieInfo: (id) => `/booking.html?movieId=${encodeURIComponent(id)}`
 };
 
 const qs = (s, el=document)=> el.querySelector(s);
@@ -21,15 +21,15 @@ function renderHero(){
     const sub = qs('#heroSub');
 
     hero.classList.add('hero--placeholder');
-    if (heroBg) heroBg.style.backgroundImage = ''; // lad CSS vise /assets/hero-default.jpg
+    if (heroBg) heroBg.style.backgroundImage = '';
     title.textContent = 'Velkommen i biografen';
     sub.textContent = 'Se programmet og køb billetter';
 }
 
 function cardTemplate(m){
     const age = (m.ageLimit != null) ? `${m.ageLimit} år` : 'Tilladt for alle';
-    const showsHref = API.showsFor(m.movieId);
-    const infoHref = API.movieInfo(m.movieId);
+    const bookingHref = API.bookingFor(m.movieId);
+    const infoHref    = API.movieInfo(m.movieId);
     const poster = m.posterUrl
         ? `<img src="${m.posterUrl}" alt="${escapeHtml(m.title || 'Plakat')}" loading="lazy">`
         : '';
@@ -44,7 +44,7 @@ function cardTemplate(m){
         <span>${escapeHtml(age)}</span>
       </p>
       <div class="movie-card__actions">
-        <a class="btn btn-primary btn-sm" href="${showsHref}">Find billetter</a>
+        <a class="btn btn-primary btn-sm" href="${bookingHref}">Find billetter</a>
         <a class="btn btn-ghost btn-sm" href="${infoHref}">Mere info</a>
       </div>
     </div>
