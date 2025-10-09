@@ -45,6 +45,11 @@ function showToast(msg) {
     }, 3500);
 }
 
+function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+
 async function api(path, options) {
     if (!options) {
         options = {};
@@ -967,7 +972,30 @@ $('#newBookingBtn').onclick = function() {
 (async function init() {
     try {
         await loadAllData();
-        goToStep(1);
+
+        // Check if movieId is provided in URL query parameter
+        const movieIdParam = getQueryParam('movieId');
+
+        if (movieIdParam) {
+            // Try to find and pre-select the movie
+            const movieId = parseInt(movieIdParam, 10);
+            const movie = allMovies.find(function(m) {
+                return m.movieId === movieId;
+            });
+
+            if (movie) {
+                // Pre-select the movie and go to step 2
+                state.selectedMovie = movie;
+                goToStep(2);
+            } else {
+                // Movie not found, show message and start at step 1
+                showToast('Film ikke fundet. Vælg venligst en film.');
+                goToStep(1);
+            }
+        } else {
+            // No movieId parameter, start at step 1 as normal
+            goToStep(1);
+        }
     } catch (e) {
         showToast('Kunne ikke initialisere booking system');
         console.error('Initialiseringsfejl:', e);

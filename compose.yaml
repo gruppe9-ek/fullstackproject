@@ -32,10 +32,10 @@ services:
       - db-data:/var/lib/mysql
       # Mount schema to run on startup
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-    # Security: Only expose to internal network, NOT to host
-    # No ports mapping = database not accessible from host machine
-    expose:
-      - "3306"
+    # Expose port 3307 to host for local development (3306 may be in use by local MySQL)
+    # For production deployment, remove this and use expose: ["3306"] instead
+    ports:
+      - "3307:3306"
     networks:
       - kino-network
     healthcheck:
