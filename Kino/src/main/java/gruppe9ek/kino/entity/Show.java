@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Show {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "show_id")
     private Integer showId;
 
     @NotNull
@@ -44,4 +45,7 @@ public class Show {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ShowStatus status = ShowStatus.scheduled;
+
+
+
 }

@@ -11,6 +11,7 @@
 
 <form id="movieForm" novalidate>
     <input type="hidden" id="movieId" />
+
     <div class="row">
         <div>
             <label for="title">Title *</label>
@@ -40,6 +41,21 @@
             <label for="duration">Duration (minutes) *</label>
             <input id="duration" type="number" min="1" required />
             <div class="hint">Must be &gt; 0</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div>
+            <label for="posterUrl">Poster URL</label>
+            <input id="posterUrl" maxlength="500" placeholder="https://..." />
+            <div class="hint">Direkte link til billede (forhold ca. 2:3)</div>
+        </div>
+        <div>
+            <label>Poster preview</label>
+            <div class="poster-preview">
+                <img id="posterPreview" alt="Poster preview" />
+                <div id="noPoster" class="no-poster">No poster</div>
+            </div>
         </div>
     </div>
 

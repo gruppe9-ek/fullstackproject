@@ -40,6 +40,7 @@ public class MovieService {
         validateAgeLimit(incoming.getAgeLimit());
         var existing = byId(id);
         existing.setTitle(incoming.getTitle());
+        existing.setPosterUrl(incoming.getPosterUrl());
         existing.setCategory(incoming.getCategory());
         existing.setAgeLimit(incoming.getAgeLimit());
         existing.setDurationMinutes(incoming.getDurationMinutes());

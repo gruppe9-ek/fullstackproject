@@ -1,151 +1,39 @@
-/* ===========================
-   Kino Admin – Movies (CSS)
-   Readable, grouped, commented
-   =========================== */
-
-/* ---- Design tokens (tweak here) ---- */
-:root {
+:root{
     --font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    --radius: 8px;
-    --space-1: 6px;
-    --space-2: 10px;
-    --space-3: 12px;
-    --space-4: 16px;
-
-    --border: 1px solid #ddd;
-    --text: #111;
-    --muted: #666;
-    --bg: #fff;
-
-    --btn-bg: #f6f6f6;
-    --btn-border: #ccc;
-
-    --btn-primary-bg: #2dd17e; /* subtle green */
-    --btn-primary-border: #1bb867;
-
-    --btn-danger-bg: #f05555;
-    --btn-danger-border: #d33;
-    --btn-danger-text: #fff;
-
-    --toast-bg: #222;
-    --toast-text: #fff;
+    --radius: 8px; --space-1:6px; --space-2:10px; --space-3:12px; --space-4:16px;
+    --border:1px solid #ddd; --text:#111; --muted:#666; --bg:#fff;
+    --btn-bg:#f6f6f6; --btn-border:#ccc;
+    --btn-primary-bg:#2dd17e; --btn-primary-border:#1bb867;
+    --btn-danger-bg:#f05555; --btn-danger-border:#d33; --btn-danger-text:#fff;
+    --toast-bg:#222; --toast-text:#fff;
 }
+html,body{margin:0;padding:0}
+body{font-family:var(--font-family);color:var(--text);background:var(--bg);
+    max-width:980px;margin:24px auto;padding:0 12px}
+h1{margin:0 0 var(--space-4)}
 
-/* ---- Base ---- */
-html, body {
-    padding: 0;
-    margin: 0;
-}
+.card, form{border:var(--border);border-radius:var(--radius);padding:var(--space-3);
+    margin-bottom:var(--space-4);background:var(--bg)}
+.row{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-3)}
+.muted{color:var(--muted);font-size:.95em}
+.hint{font-size:.9em;color:var(--muted)}
 
-body {
-    font-family: var(--font-family);
-    color: var(--text);
-    background: var(--bg);
-    max-width: 980px;
-    margin: 24px auto;
-    padding: 0 12px;
-}
+label{display:block;margin:var(--space-2) 0 var(--space-1);font-weight:600}
+input,select,textarea{width:100%;padding:var(--space-2);border:1px solid var(--btn-border);
+    border-radius:var(--radius);background:#fff;outline:none}
+input:focus,select:focus,textarea:focus,button:focus{outline:2px solid #88d3ff;outline-offset:2px}
 
-h1 {
-    margin: 0 0 var(--space-4);
-}
+.actions{display:flex;gap:var(--space-2);margin-top:var(--space-2)}
+button{padding:var(--space-2) var(--space-3);border-radius:var(--radius);border:1px solid var(--btn-border);background:var(--btn-bg);cursor:pointer}
+button.primary{background:var(--btn-primary-bg);border-color:var(--btn-primary-border)}
+button.danger{background:var(--btn-danger-bg);border-color:var(--btn-danger-border);color:var(--btn-danger-text)}
 
-/* ---- Layout & cards ---- */
-.card,
-form {
-    border: var(--border);
-    border-radius: var(--radius);
-    padding: var(--space-3);
-    margin-bottom: var(--space-4);
-    background: var(--bg);
-}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;background:var(--toast-bg);
+    color:var(--toast-text);padding:var(--space-2) var(--space-3);border-radius:var(--radius);display:none}
 
-.row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
-}
+.poster-preview{border:1px solid #ddd;border-radius:8px;padding:8px;height:260px;
+    display:grid;place-items:center;background:#fafafa;position:relative}
+.poster-preview img{max-height:100%;max-width:100%;display:none;object-fit:contain}
+.no-poster{position:absolute;inset:0;display:grid;place-items:center;color:#999}
 
-/* ---- Typography helpers ---- */
-.muted {
-    color: var(--muted);
-    font-size: 0.95em;
-}
-
-.hint {
-    font-size: 0.9em;
-    color: var(--muted);
-}
-
-/* ---- Form elements ---- */
-label {
-    display: block;
-    margin: var(--space-2) 0 var(--space-1);
-    font-weight: 600;
-}
-
-input,
-select,
-textarea {
-    width: 100%;
-    padding: var(--space-2);
-    border: 1px solid var(--btn-border);
-    border-radius: var(--radius);
-    background: #fff;
-    outline: none;
-}
-
-/* Better focus visibility */
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-    outline: 2px solid #88d3ff;
-    outline-offset: 2px;
-}
-
-/* ---- Buttons ---- */
-.actions {
-    display: flex;
-    gap: var(--space-2);
-    margin-top: var(--space-2);
-}
-
-button {
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius);
-    border: 1px solid var(--btn-border);
-    background: var(--btn-bg);
-    cursor: pointer;
-}
-
-/* Primary (save) */
-button.primary {
-    background: var(--btn-primary-bg);
-    border-color: var(--btn-primary-border);
-}
-
-/* Danger (delete) */
-button.danger {
-    background: var(--btn-danger-bg);
-    border-color: var(--btn-danger-border);
-    color: var(--btn-danger-text);
-}
-
-/* ---- Toast ---- */
-.toast {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 20px;
-    background: var(--toast-bg);
-    color: var(--toast-text);
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius);
-    display: none; /* shown via JS */
-}
-
-/* ---- Responsive ---- */
-@media (max-width: 720px) {
-    .row { grid-template-columns: 1fr; }
-}
+@media (max-width:720px){ .row{grid-template-columns:1fr} }

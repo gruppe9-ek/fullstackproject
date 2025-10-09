@@ -9,6 +9,7 @@ import lombok.*;
 @Table(name = "movies")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Movie {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer movieId;
 
@@ -16,6 +17,10 @@ public class Movie {
     @Size(max = 255)
     @Column(nullable = false, length = 255)
     private String title;
+
+    @Size(max = 500)
+    @Column(name = "poster_url", length = 500)
+    private String posterUrl;
 
     @NotBlank
     @Size(max = 50)
@@ -32,12 +37,9 @@ public class Movie {
     @Column(name = "duration_minutes", nullable = false)
     private Integer durationMinutes;
 
-    // Lob betyder large OBject, det er indsat her da en tekst kan blive lang fx (biografbeskrivelser, store lister af actors)
     @Lob private String actors;
     @Lob private String description;
 }
-
-
 
 
 

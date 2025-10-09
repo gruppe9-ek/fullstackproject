@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kino – Forside</title>
+    <link rel="stylesheet" href="/assets/css/home.css" />
+    <script defer src="/assets/js/home.js"></script>
+</head>
+<body>
+<header class="topbar">
+    <div class="brand"><a href="/" aria-label="Forside">Kino</a></div>
+    <nav class="nav">
+        <a href="/movies.html">Film</a>
+        <a href="/shows.html">Forestillinger</a>
+        <a href="/cart.html">Kurv</a>
+        <a class="btn btn-outline" href="/admin/login">Admin login</a>
+    </nav>
+</header>
+
+<section id="hero" class="hero hero--placeholder">
+    <div class="hero__bg" id="heroBg" style="background-image:url('/static/assets/hero-default.jpg')"></div>
+    <div class="hero__shade"></div>
+    <div class="hero__content">
+        <h1 id="heroTitle">Velkommen i biografen</h1>
+        <p class="hero__sub" id="heroSub">Se programmet og køb billetter</p>
+        <div class="hero__cta">
+            <a class="btn btn-primary" href="/shows.html">Køb billet</a>
+            <a class="btn btn-ghost" href="/movies.html">Se alle film</a>
+        </div>
+    </div>
+</section>
+
+<section class="filters">
+    <div class="container">
+        <div class="chips">
+            <a class="chip" href="/movies.html?cat=Action">Action</a>
+            <a class="chip" href="/movies.html?cat=Komedie">Komedie</a>
+            <a class="chip" href="/movies.html?cat=Familie">Familie</a>
+            <a class="chip" href="/movies.html?cat=Drama">Drama</a>
+            <a class="chip" href="/movies.html">Alle</a>
+        </div>
+    </div>
+</section>
+
+<main class="container">
+    <div class="section-head">
+        <h2 class="section-title">Aktuelle film</h2>
+        <div class="section-tools">
+            <input id="searchInput" type="search" placeholder="Søg film…" aria-label="Søg film" />
+        </div>
+    </div>
+
+    <div id="movieGrid" class="movie-grid" aria-live="polite"></div>
+    <div id="emptyState" class="empty" hidden>Ingen film fundet.</div>
+    <div id="errorBox" class="error" hidden>Kunne ikke hente film. Prøv igen.</div>
+</main>
+
+<section class="info-banner">
+    <div class="container info-banner__grid">
+        <div><h3>Komfort i top</h3><p>Moderne sale og lækre sæder. Oplev film i højeste kvalitet.</p></div>
+        <div><h3>Enkel bestilling</h3><p>Køb billetter online på få klik – nemt og hurtigt.</p></div>
+        <div><h3>Events & forpremierer</h3><p>Hold øje med særlige visninger og begivenheder.</p></div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container footer__grid">
+        <div>© <span id="year"></span> Kino</div>
+        <nav class="footer__nav">
+            <a href="/about.html">Om os</a>
+            <a href="/contact.html">Kontakt</a>
+            <a href="/terms.html">Vilkår</a>
+        </nav>
+    </div>
+</footer>
+</body>
+</html>

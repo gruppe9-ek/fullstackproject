@@ -28,4 +28,6 @@ public class Product {
     @DecimalMin("0.00")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
+
+
 }
