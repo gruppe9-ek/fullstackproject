@@ -30,6 +30,8 @@ services:
       MYSQL_DATABASE: kinoxp
     volumes:
       - db-data:/var/lib/mysql
+      # Mount schema to run on startup
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     # Security: Only expose to internal network, NOT to host
     # No ports mapping = database not accessible from host machine
     expose:
