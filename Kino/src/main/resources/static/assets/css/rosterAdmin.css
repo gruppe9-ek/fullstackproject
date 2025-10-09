@@ -1,0 +1,86 @@
+/* Minimal styling kun for roster-siden */
+#rosterTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#rosterTable thead th {
+    text-align: left;
+    background: #f8fafc;        /* lys header */
+    font-weight: 600;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+#rosterTable th,
+#rosterTable td {
+    padding: .6rem .5rem;
+}
+
+#rosterTable tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+#rosterTable tbody tr:nth-child(odd) {
+    background: #fafafa;        /* let zebra-effekt */
+}
+
+/* Knapper og inputs – små, neutrale forbedringer */
+header .row button,
+#copyPrevBtn,
+#assignForm button,
+#rosterTable button,
+#assignForm input,
+#assignForm select {
+    padding: .5rem .6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+}
+
+#assignForm button,
+header .row button,
+#rosterTable button {
+    background: #1f6feb;
+    color: #fff;
+    border-color: #1f6feb;
+    cursor: pointer;
+}
+
+#assignForm button:hover,
+header .row button:hover,
+#rosterTable button:hover {
+    filter: brightness(0.96);
+}
+
+/* Beskedfelt (flash) – matcher vores JS setFlash(type) */
+#flash {
+    margin: .5rem 0;
+    padding: .6rem .8rem;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+#flash.info {
+    background: #eef2ff;
+    color: #3730a3;
+    border: 1px solid #c7d2fe;
+}
+
+#flash.success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+#flash.error {
+    background: #fef2f2;
+    color: #7f1d1d;
+    border: 1px solid #fecaca;
+}
+
+/* Lille responsiv hjælp til smalle skærme */
+@media (max-width: 800px) {
+    header .row { gap: .4rem; }
+    #rosterTable th:nth-child(4),
+    #rosterTable td:nth-child(4) { white-space: nowrap; }
+}

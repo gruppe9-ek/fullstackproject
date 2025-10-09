@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="da">
+<head>
+    <meta charset="utf-8" />
+    <title>Vagtplan (Admin)</title>
+    <!-- Base-styles fra projektet -->
+    <link rel="stylesheet" href="assets/css/moviesAdmin.css">
+    <link rel="stylesheet" href="assets/css/roster.css">
+</head>
+<body>
+<header class="container">
+    <h1>Vagtplan – Admin</h1>
+
+    <div class="row">
+        <button id="prevWeekBtn">⟵ Forrige uge</button>
+
+        <label for="mondayInput">Ugens mandag:</label>
+        <input id="mondayInput" type="date">
+
+        <button id="nextWeekBtn">Næste uge ⟶</button>
+        <button id="copyPrevBtn" title="Kopiér forrige uge til valgt uge">Kopiér forrige uge</button>
+    </div>
+</header>
+
+<main class="container">
+
+    <div id="flash" class="row"></div>
+
+    <section class="card">
+        <h2>Ugeoversigt</h2>
+        <table id="rosterTable" class="table">
+            <thead>
+            <tr>
+                <th>Dato</th>
+                <th>Medarbejder</th>
+                <th>Rolle</th>
+                <th>Handling</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>Tildel ny vagt</h2>
+        <form id="assignForm" class="row" novalidate>
+            <input type="date" id="assignDate" required>
+            <input type="number" id="assignStaffId" min="1" placeholder="Staff ID" required>
+
+            <select id="assignRole" required>
+                <!-- fyldes af JS -->
+            </select>
+
+            <button type="submit">Tildel</button>
+        </form>
+    </section>
+
+</main>
+
+<script src="assets/js/roster.js" defer></script>
+</body>
+</html>
