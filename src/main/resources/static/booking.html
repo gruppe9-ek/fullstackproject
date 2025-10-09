@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="assets/css/booking.css">
 </head>
 <body>
+<header class="topbar">
+    <div class="brand"><a href="/" aria-label="Forside">Kino</a></div>
+    <nav class="nav">
+        <a href="/movies-overview.html">Film</a>
+        <a href="/booking.html" class="active">Forestillinger</a>
+        <a href="/cart.html">Kurv</a>
+        <a class="btn btn-outline" href="/admin-login.html">Admin login</a>
+    </nav>
+</header>
+
+<main class="container">
 <h1>Bestil Biografbilletter</h1>
 
 <!-- Progress indicator -->
@@ -121,7 +132,22 @@
 
 <!-- Toast notification -->
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</main>
 
+<footer class="footer">
+    <div class="container footer__grid">
+        <div>© <span id="year"></span> Kino</div>
+        <nav class="footer__nav">
+            <a href="/about.html">Om os</a>
+            <a href="/contact.html">Kontakt</a>
+            <a href="/terms.html">Vilkår</a>
+        </nav>
+    </div>
+</footer>
+
+<script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+</script>
 <script src="assets/js/booking.js"></script>
 </body>
 </html>

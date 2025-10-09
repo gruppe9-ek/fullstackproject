@@ -1,5 +1,5 @@
 /* ===========================
-   Kino Admin – Movies CSS (Dark Theme)
+   Kino Admin – Shows CSS (Dark Theme)
    =========================== */
 
 /* ---- Design tokens (Dark Theme) ---- */
@@ -24,6 +24,7 @@
 
     --danger: #f05555;
     --danger-hover: #d33;
+    --success: #4ade80;
 }
 
 * {
@@ -112,6 +113,11 @@ body {
 h1 {
     margin: 0 0 var(--space-4);
     font-size: clamp(24px, 4vw, 32px);
+}
+
+h2 {
+    margin: var(--space-4) 0 var(--space-3);
+    font-size: clamp(20px, 3vw, 24px);
 }
 
 /* ---- Card & Form ---- */
@@ -230,40 +236,33 @@ button.danger:hover {
     z-index: 1000;
 }
 
-/* ---- Poster Preview ---- */
-.poster-preview {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 8px;
-    height: 260px;
-    display: grid;
-    place-items: center;
-    background: var(--panel);
-    position: relative;
+/* ---- Badge ---- */
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
-.poster-preview img {
-    max-height: 100%;
-    max-width: 100%;
-    display: none;
-    object-fit: contain;
+.badge-success {
+    background: var(--success);
+    color: #081018;
 }
 
-.no-poster {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    color: var(--muted);
+.badge-danger {
+    background: var(--danger);
+    color: #fff;
 }
 
-/* ---- Movies List ---- */
-#movies {
+/* ---- Shows List ---- */
+#shows {
     display: grid;
     gap: var(--gap);
 }
 
-.movie-item {
+.show-item {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -272,23 +271,23 @@ button.danger:hover {
     transition: all 0.2s;
 }
 
-.movie-item:hover {
+.show-item:hover {
     background: var(--card-hover);
     border-color: #2f3750;
     transform: translateY(-2px);
 }
 
-.movie-item h3 {
+.show-item h3 {
     margin: 0 0 var(--space-2);
     color: var(--accent);
 }
 
-.movie-item p {
+.show-item p {
     margin: var(--space-1) 0;
     color: var(--muted);
 }
 
-.movie-item .actions {
+.show-item .actions {
     margin-top: var(--space-3);
     padding-top: var(--space-3);
     border-top: 1px solid var(--border);

@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="assets/css/moviesAdmin.css">
 </head>
 <body>
+<header class="topbar">
+    <div class="brand"><a href="/">Kino</a></div>
+    <nav class="nav">
+        <a href="/admin-dashboard.html">Dashboard</a>
+        <button id="logoutBtn" class="btn btn-outline">Log ud</button>
+    </nav>
+</header>
+
+<main class="container">
 <h1>Admin – Movies</h1>
 
 <form id="movieForm" novalidate>
@@ -75,7 +84,17 @@
 <div id="movies"></div>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</main>
 
+<script type="module">
+    import { requireAuth, logout } from "/assets/js/adminAuth.js";
+    requireAuth("/admin-login.html");
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        logout();
+        location.href = "/admin-login.html";
+    });
+</script>
 <script src="assets/js/moviesAdmin.js"></script>
 </body>
 </html>
