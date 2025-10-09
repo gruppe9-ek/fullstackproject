@@ -1,0 +1,58 @@
+services:
+  # Java Application Service
+  kino-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kino-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Database connection configuration
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kinoxp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: kinouser
+      SPRING_DATASOURCE_PASSWORD: kinopass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_JPA_SHOW_SQL: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - kino-network
+    restart: unless-stopped
+
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: kino-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: kinoxp
+      MYSQL_USER: kinouser
+      MYSQL_PASSWORD: kinopass
+    # Security: Only expose to internal network, NOT to host machine
+    # No ports mapping to prevent external access
+    expose:
+      - "3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - kino-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+# Network definition
+networks:
+  kino-network:
+    driver: bridge
+
+# Volume for persistent database storage
+volumes:
+  mysql-data:
+    driver: local
