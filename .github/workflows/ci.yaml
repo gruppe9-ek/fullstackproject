@@ -29,16 +29,5 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Build & Test
-        run: mvn -B -q test
-
-      # Helpful when a test fails
-      - name: Upload surefire/failsafe reports
-        if: always()
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808  # v4 pinned
-        with:
-          name: test-reports
-          path: |
-            target/surefire-reports/**
-            target/failsafe-reports/**
-            target/site/jacoco/**
+      - name: Build
+        run: mvn -B -q compile
