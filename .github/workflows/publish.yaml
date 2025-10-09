@@ -18,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab3762ebc23c3225a5160d61d8  # v4 pinned
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955  # v4.3.0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9  # v4 pinned
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00  # v4.7.1
         with:
           distribution: temurin
           java-version: '21'
@@ -34,7 +34,7 @@ jobs:
         run: mvn -B -q package -DskipTests
 
       - name: Log in to GHCR
-        uses: docker/login-action@a464b3e72a0df1c40a90c0d436f7c9b7240a0f1d  # v3 pinned
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567  # v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
